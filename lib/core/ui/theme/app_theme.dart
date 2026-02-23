@@ -12,13 +12,11 @@ class AppTheme {
   static const Color lightSurface = Colors.white;
   static const Color lightOnSurface = navy;
   static const Color lightSecondaryText = navy2;
-  static const Color darkBackground = Color(0xFF000002);
+  static const Color darkBackground = Color(0xFF121418);
+  static const Color cardDark = Color(0xFF1a1d23);
   static const Color darkSurface = navy;
   static const Color darkOnSurface = offWhite;
   static const Color darkSecondaryText = Color(0xFFD6D9E3);
-  static const Color userBubble = primaryColor;
-  static const Color laraBubble = offWhite;
-  static const Color laraBubbleDark = navy2;
 
   static ThemeData get lightTheme {
     final cs = ColorScheme.fromSeed(seedColor: primaryColor).copyWith(
@@ -30,6 +28,7 @@ class AppTheme {
       onSurface: primaryDark,
       onSurfaceVariant: offWhite,
       onInverseSurface: nearBlack,
+      shadow: Colors.grey
     );
 
     return ThemeData(
@@ -166,12 +165,14 @@ class AppTheme {
           seedColor: primaryColor,
           brightness: Brightness.dark,
         ).copyWith(
+          error: Colors.redAccent,
           primary: primaryColor,
           secondary: secondaryColor,
           surface: darkSurface,
           onPrimary: Colors.white,
-          onSecondary: Colors.white,
+          onSecondary: Colors.grey,
           onSurface: darkOnSurface,
+          onSurfaceVariant: cardDark,
         );
 
     return ThemeData(
@@ -181,10 +182,10 @@ class AppTheme {
       colorScheme: cs,
       scaffoldBackgroundColor: darkBackground,
       appBarTheme: const AppBarTheme(
-        backgroundColor: darkSurface,
+        backgroundColor: darkBackground,
         foregroundColor: darkOnSurface,
         elevation: 0,
-        iconTheme: IconThemeData(color: darkSecondaryText),
+        iconTheme: IconThemeData(color: darkOnSurface),
         centerTitle: false,
         titleTextStyle: TextStyle(
           fontFamily: 'Inter',
@@ -195,11 +196,6 @@ class AppTheme {
         ),
       ),
       iconTheme: const IconThemeData(color: darkSecondaryText),
-      cardTheme: CardThemeData(
-        elevation: 0,
-        color: darkSurface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 48),
@@ -220,8 +216,7 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           visualDensity: const VisualDensity(vertical: -4),
-          foregroundColor:
-              primaryDark, // Troquei para primaryDark para dar mais contraste no fundo escuro
+          foregroundColor: primaryDark,
           side: BorderSide.none,
           padding: const EdgeInsets.symmetric(vertical: 16),
           overlayColor: Colors.transparent,
@@ -229,7 +224,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: navy2,
+        fillColor: cardDark,
         suffixIconColor: darkSecondaryText,
         iconColor: darkSecondaryText,
         prefixIconColor: darkSecondaryText,
@@ -243,7 +238,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: primaryColor),
+          borderSide: const BorderSide(color: lightOnSurface),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -292,7 +287,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        tileColor: navy2,
+        tileColor: cardDark,
         titleTextStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
