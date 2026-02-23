@@ -54,7 +54,6 @@ class ChatCardWidget extends StatelessWidget {
             padding: const EdgeInsets.only(right: 4.0),
             child: isTyping
                 ? Text(
-                  //Tentar animar esse texto depois
                     'Digitando...',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface,
@@ -69,9 +68,9 @@ class ChatCardWidget extends StatelessWidget {
                     ),
                   ),
           ),
-          trailing: chat.lastMessage?.date != null
+          trailing: chat.lastMessage?.createdAt != null
               ? Text(
-                  TimeUtils.formatRelativeTime(chat.lastMessage!.date),
+                  TimeUtils.formatRelativeTime(chat.lastMessage!.createdAt),
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: theme.colorScheme.onSecondary,
                     fontWeight: FontWeight.w500,
