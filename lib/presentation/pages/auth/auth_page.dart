@@ -71,7 +71,7 @@ class _AuthPageState extends State<AuthPage> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: theme.colorScheme.onSecondary,
+                              color: theme.colorScheme.shadow,
                               blurRadius: 4,
                               spreadRadius: 0.4,
                               offset: const Offset(0, 2),

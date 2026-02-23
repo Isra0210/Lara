@@ -5,7 +5,6 @@ import 'package:lara/core/ui/overlays/loading_overlay.dart';
 import 'package:lara/core/ui/overlays/snackbar_overlay.dart';
 import 'package:lara/domain/entities/user_entity.dart';
 import 'package:lara/domain/usecases/usecases.dart';
-import 'package:lara/presentation/controller/settings_controller.dart';
 import 'package:lara/presentation/presentation.dart';
 
 enum AuthMode { signIn, signUp }
@@ -31,8 +30,6 @@ class AuthController extends GetxController {
   final SignOutUseCase _signOut;
   final WatchAuthStateUseCase _watchAuthState;
   final GetCachedUserUseCase _getCachedUser;
-
-  final settingsController = Get.find<SettingsController>();
 
   final formKey = GlobalKey<FormState>();
   late TextEditingController nameController;
