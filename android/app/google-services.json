@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "94839982124",
+    "project_id": "lara-fec8f",
+    "storage_bucket": "lara-fec8f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94839982124:android:4dbb8ce1f6743ff86ca989",
+        "android_client_info": {
+          "package_name": "com.example.lara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKAouqA7gVkjrUUCpTWKE3zZUSRQ1uxyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
