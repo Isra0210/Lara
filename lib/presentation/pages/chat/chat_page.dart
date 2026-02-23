@@ -64,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                       suffixIcon: IconButton(
                         style: IconButton.styleFrom(
-                          foregroundColor: Theme.of(context).primaryColor,
+                          foregroundColor: Theme.of(context).iconTheme.color,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ),
@@ -75,18 +75,6 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                   ),
                 ),
-                // const SizedBox(width: 8),
-                // IconButton(
-                //   style: IconButton.styleFrom(
-                //     backgroundColor: Theme.of(context).primaryColor,
-                //     foregroundColor: Colors.white,
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(100),
-                //     ),
-                //   ),
-                //   onPressed: () {},
-                //   icon: Icon(AppIcons.send),
-                // ),
               ],
             ),
           ),
