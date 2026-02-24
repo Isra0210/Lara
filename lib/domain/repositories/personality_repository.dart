@@ -1,3 +1,4 @@
+
 import 'package:lara/domain/entities/chat_entity.dart';
 
 abstract class PersonalityRepository {

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:intl/intl.dart';
 import 'package:lara/core/ui/resources/app_images.dart';
-import 'package:lara/core/utils/time_utils.dart';
 import 'package:lara/domain/entities/chat_entity.dart';
+import 'package:lara/presentation/controller/home_controller.dart';
 
-class ChatCardWidget extends StatelessWidget {
+class ChatCardWidget extends GetView<HomeController> {
   const ChatCardWidget({
     required this.chat,
+    required this.isSynced,
     this.onTap,
-    this.onLongPress,
-    this.isTyping = false,
     super.key,
   });
 
   final ChatEntity chat;
+  final bool isSynced;
   final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
-  final bool isTyping;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,6 @@ class ChatCardWidget extends StatelessWidget {
       children: [
         ListTile(
           onTap: onTap,
-          onLongPress: onLongPress,
           visualDensity: VisualDensity.compact,
           leading: leading,
           title: Text(
@@ -51,33 +50,36 @@ class ChatCardWidget extends StatelessWidget {
             ),
           ),
           subtitle: Padding(
-            padding: const EdgeInsets.only(right: 4.0),
-            child: isTyping
-                ? Text(
-                    'Digitando...',
+            padding: const EdgeInsets.only(top: 6.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (chat.lastMessage != null)
+                  Text(
+                    chat.lastMessage!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface,
+                      color: theme.colorScheme.onSecondary,
                     ),
-                  )
-                : Text(
-                    chat.lastMessage?.content ?? '',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                if (chat.updatedAt != null && chat.lastMessage == null)
+                  Text(
+                    DateFormat('dd/MM/yyyy HH:mm').format(chat.updatedAt!),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSecondary,
                     ),
                   ),
+              ],
+            ),
           ),
-          trailing: chat.lastMessage?.createdAt != null
-              ? Text(
-                  TimeUtils.formatRelativeTime(chat.lastMessage!.createdAt),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSecondary,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 10,
-                  ),
+          trailing: isSynced
+              ? Icon(
+                  Icons.cloud_done,
+                  color: theme.colorScheme.onSurface,
+                  size: 16,
                 )
-              : null,
+              : const Icon(Icons.cloud_off, size: 16),
         ),
         Divider(
           indent: 20,

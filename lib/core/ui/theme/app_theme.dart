@@ -168,7 +168,7 @@ class AppTheme {
           error: Colors.redAccent,
           primary: primaryColor,
           secondary: secondaryColor,
-          surface: darkSurface,
+          surface: darkBackground,
           onPrimary: Colors.white,
           onSecondary: Colors.grey,
           onSurface: darkOnSurface,
@@ -279,8 +279,8 @@ class AppTheme {
         bodySmall: TextStyle(fontSize: 12, color: darkSecondaryText),
         labelMedium: TextStyle(fontSize: 12, color: darkSecondaryText),
       ),
-      dividerTheme: const DividerThemeData(
-        color: Color(0xFF2A335A),
+      dividerTheme: DividerThemeData(
+        color: Colors.grey.shade700,
         thickness: 1,
       ),
       listTileTheme: ListTileThemeData(

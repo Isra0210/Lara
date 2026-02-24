@@ -1,74 +1,71 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:lara/core/network/connectivity_service.dart';
 import 'package:lara/data/datasources/local/chat_local_datasource.dart';
-import 'package:lara/data/datasources/local/db/db_helper.dart';
-import 'package:lara/data/datasources/remote/chat_sync_remote_datasource.dart';
-import 'package:lara/data/datasources/remote/gemini_remote_datasource.dart';
+import 'package:lara/data/datasources/local/database/sqflite_helper.dart';
+import 'package:lara/data/datasources/local/message_local_datasource.dart';
+import 'package:lara/data/datasources/remote/firebase_sync_datasource.dart';
+import 'package:lara/data/datasources/remote/gemini_datasource.dart';
 import 'package:lara/data/repositories/chat_repository_impl.dart';
 import 'package:lara/domain/repositories/chat_repository.dart';
 import 'package:lara/domain/usecases/get_messages_usecase.dart';
-import 'package:lara/domain/usecases/get_recent_chats_usecase.dart';
-import 'package:lara/domain/usecases/retry_pending_sync_usecase.dart';
 import 'package:lara/domain/usecases/send_message_usecase.dart';
 import 'package:lara/presentation/controller/chat_controller.dart';
 import 'package:lara/presentation/controller/settings_controller.dart';
-import 'package:uuid/uuid.dart';
 
-class ChatBinding implements Bindings {
+class ChatBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => DbHelper.instance, fenix: true);
-    Get.lazyPut(() => ChatLocalDatasource(Get.find()), fenix: true);
+    Get.lazyPut<SQFliteHelper>(() => SQFliteHelper.instance, fenix: true);
+    Get.lazyPut<ConnectivityService>(() => ConnectivityService(), fenix: true);
 
-    Get.lazyPut(
-      () => GeminiRemoteDatasource(
-        apiKey: const String.fromEnvironment('GEMINI_API_KEY'),
-        model: 'gemini-1.5-flash',
+    // Chat Datasources
+    Get.lazyPut<ChatLocalDatasource>(
+      () => ChatLocalDatasource(Get.find<SQFliteHelper>()),
+      fenix: true,
+    );
+    Get.lazyPut<MessageLocalDatasource>(
+      () => MessageLocalDatasourceImpl(Get.find<SQFliteHelper>()),
+      fenix: true,
+    );
+    Get.lazyPut<GeminiDatasource>(() => GeminiDatasource(), fenix: true);
+    Get.lazyPut<FirebaseSyncDatasource>(
+      () => FirebaseSyncDatasource(
+        FirebaseFirestore.instance,
+        FirebaseAuth.instance,
       ),
       fenix: true,
     );
 
-    Get.lazyPut(() => FirebaseFirestore.instance, fenix: true);
-    Get.lazyPut(
-      () => ChatSyncRemoteDatasource(Get.find<FirebaseFirestore>()),
-      fenix: true,
-    );
-
+    // Chat Repository
     Get.lazyPut<ChatRepository>(
       () => ChatRepositoryImpl(
-        local: Get.find<ChatLocalDatasource>(),
-        lara: Get.find<GeminiRemoteDatasource>(),
-        sync: Get.find<ChatSyncRemoteDatasource>(),
-        uuid: const Uuid(),
+        chatLocal: Get.find<ChatLocalDatasource>(),
+        messageLocal: Get.find<MessageLocalDatasource>(),
+        gemini: Get.find<GeminiDatasource>(),
+        firebaseSync: Get.find<FirebaseSyncDatasource>(),
+        connectivity: Get.find<ConnectivityService>(),
       ),
       fenix: true,
     );
 
     Get.lazyPut(
-      () => GetMessagesUseCase(Get.find<ChatRepository>()),
+      () => GetMessagesUsecase(Get.find<ChatRepository>()),
       fenix: true,
     );
     Get.lazyPut(
-      () => SendMessageStreamUsecase(Get.find<ChatRepository>()),
-      fenix: true,
-    );
-    Get.lazyPut(
-      () => GetRecentChatsUseCase(Get.find<ChatRepository>()),
-      fenix: true,
-    );
-    Get.lazyPut(
-      () => RetryPendingSyncUseCase(Get.find<ChatRepository>()),
+      () => SendMessageUsecase(Get.find<ChatRepository>()),
       fenix: true,
     );
 
-    //TODO insert get recents chats
-    Get.put(
-      ChatController(
-        getMessages: Get.find<GetMessagesUseCase>(),
-        sendMessageStream: Get.find<SendMessageStreamUsecase>(),
-        retryPendingSync: Get.find<RetryPendingSyncUseCase>(),
-        settings: Get.find<SettingsController>(),
+    Get.lazyPut(
+      () => ChatController(
+        Get.find<SendMessageUsecase>(),
+        Get.find<GetMessagesUsecase>(),
+        Get.find<SettingsController>(),
       ),
+      fenix: true,
     );
   }
 }

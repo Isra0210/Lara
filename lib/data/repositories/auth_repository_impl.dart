@@ -102,10 +102,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, UserEntity?>> getCachedUser() async {
+  Future<Either<Failure, UserEntity>> getCachedUser() async {
     try {
       final u = await _local.getCachedUser();
-      return right(u);
+      return right(u!);
     } catch (e) {
       return left(mapExceptionToFailure(e));
     }

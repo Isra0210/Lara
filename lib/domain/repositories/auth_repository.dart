@@ -23,5 +23,5 @@ abstract class AuthRepository {
 
   Future<Either<Failure, void>> signOut();
 
-  Future<Either<Failure, UserEntity?>> getCachedUser();
+  Future<Either<Failure, UserEntity>> getCachedUser();
 }

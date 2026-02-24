@@ -3,10 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lara/core/ui/resources/app_icons.dart';
-import 'package:lara/core/ui/resources/app_images.dart';
 import 'package:lara/core/ui/ui.dart';
 import 'package:lara/domain/entities/chat_entity.dart';
-import 'package:lara/presentation/controller/chat_controller.dart';
 import 'package:lara/presentation/controller/home_controller.dart';
 import 'package:lara/presentation/pages/pages.dart';
 
@@ -46,7 +44,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
 
     final appBar = AppBar(
@@ -59,20 +57,13 @@ class _HomePageState extends State<HomePage> {
           builder: (controller) {
             return AnimatedSwitcher(
               duration: const Duration(milliseconds: 160),
-              child: controller.isScrolled
-                  ? BackdropFilter(
-                      key: const ValueKey('blur'),
-                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: Container(
-                        color: theme.colorScheme.surface.withValues(
-                          alpha: 0.55,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      key: const ValueKey('no_blur'),
-                      color: Colors.transparent,
-                    ),
+              child: BackdropFilter(
+                key: const ValueKey('blur'),
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.55),
+                ),
+              ),
             );
           },
         ),
@@ -95,7 +86,7 @@ class _HomePageState extends State<HomePage> {
               ),
               IconButton(
                 style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                onPressed: () => Get.toNamed(ChatPage.route),
+                onPressed: controller.createNewChat,
                 icon: Icon(AppIcons.plus),
               ),
             ],
@@ -128,7 +119,8 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
+                controller.deleteChat(chat.id);
               },
               child: Text(
                 'Excluir',
@@ -142,71 +134,81 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    final emptyMessage = Column(
-      spacing: 40,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: size.width * 0.8,
-              height: size.height * 0.36,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 20,
-                children: [
-                  Image.asset(AppImages.noMessage, height: 140),
-                  Center(
-                    child: SizedBox(
-                      width: size.width * 0.6,
-                      child: Text(
-                        'Nenhum chat ainda.\nComece um agora!',
-                        style: theme.textTheme.titleMedium!.copyWith(
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+    final emptyMessage = Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.chat_bubble_outline, size: 100),
+          const SizedBox(height: 16),
+          Text(
+            'Nenhuma conversa ainda',
+            style: theme.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w400,
             ),
-          ],
-        ),
-      ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Toque no + para começar',
+            style: theme.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
     );
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: appBar,
-      body: GetBuilder<ChatController>(
-        builder: (controller) {
-          if (controller.chats.isEmpty) return emptyMessage;
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator.adaptive());
+        }
+        if (controller.chats.isEmpty) return emptyMessage;
 
-          return ListView.builder(
+        return RefreshIndicator(
+          onRefresh: controller.loadChats,
+          child: ListView.builder(
             itemCount: controller.chats.length,
             itemBuilder: (context, index) {
-              return ChatCardWidget(
-                isTyping: true,
-                chat: controller.chats[index],
-                onLongPress: () => onDeleteChat(controller.chats[index]),
-                onTap: () {
-                  Get.toNamed(ChatPage.route);
-                },
+              final chat = controller.chats[index];
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                margin: const EdgeInsets.only(top: 8),
+                child: Dismissible(
+                  key: Key(chat.id),
+                  confirmDismiss: (_) async {
+                    onDeleteChat(chat);
+                    return false;
+                  },
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.error,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      Icons.delete,
+                      color: theme.scaffoldBackgroundColor,
+                    ),
+                  ),
+                  child: ChatCardWidget(
+                    isSynced: controller.chats[index].syncedToFirebase,
+                    chat: chat,
+                    onTap: () => controller.openChat(chat),
+                  ),
+                ),
               );
             },
             controller: _scrollController,
             padding: EdgeInsets.only(
               top: kToolbarHeight + MediaQuery.paddingOf(context).top,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      }),
     );
   }
 }

@@ -11,12 +11,12 @@ enum AuthMode { signIn, signUp }
 
 class AuthController extends GetxController {
   AuthController({
-    required SignInWithEmailUseCase signInWithEmail,
-    required RegisterWithEmailUseCase registerWithEmail,
-    required SignInWithGoogleUseCase signInWithGoogle,
-    required SignOutUseCase signOut,
-    required WatchAuthStateUseCase watchAuthState,
-    required GetCachedUserUseCase getCachedUser,
+    required SignInWithEmailUsecase signInWithEmail,
+    required RegisterWithEmailUsecase registerWithEmail,
+    required SignInWithGoogleUsecase signInWithGoogle,
+    required SignOutUsecase signOut,
+    required WatchAuthStateUsecase watchAuthState,
+    required GetCachedUserUsecase getCachedUser,
   }) : _signInWithEmail = signInWithEmail,
        _registerWithEmail = registerWithEmail,
        _signInWithGoogle = signInWithGoogle,
@@ -24,12 +24,12 @@ class AuthController extends GetxController {
        _watchAuthState = watchAuthState,
        _getCachedUser = getCachedUser;
 
-  final SignInWithEmailUseCase _signInWithEmail;
-  final RegisterWithEmailUseCase _registerWithEmail;
-  final SignInWithGoogleUseCase _signInWithGoogle;
-  final SignOutUseCase _signOut;
-  final WatchAuthStateUseCase _watchAuthState;
-  final GetCachedUserUseCase _getCachedUser;
+  final SignInWithEmailUsecase _signInWithEmail;
+  final RegisterWithEmailUsecase _registerWithEmail;
+  final SignInWithGoogleUsecase _signInWithGoogle;
+  final SignOutUsecase _signOut;
+  final WatchAuthStateUsecase _watchAuthState;
+  final GetCachedUserUsecase _getCachedUser;
 
   final formKey = GlobalKey<FormState>();
   late TextEditingController nameController;
@@ -127,8 +127,16 @@ class AuthController extends GetxController {
     final res = await _signInWithGoogle(
       passwordToLinkIfRequired: passwordToLink,
     );
-    res.fold((f) => SnackbarOverlay.error(f.message), (u) => setUserEntity(u));
-    LoadingOverlay.hidden();
+    res.fold(
+      (f) {
+        LoadingOverlay.hidden();
+        Future.delayed(Duration.zero, () => SnackbarOverlay.warning(f.message));
+      },
+      (u) {
+        LoadingOverlay.hidden();
+        setUserEntity(u);
+      },
+    );
   }
 
   Future<void> logout() async {

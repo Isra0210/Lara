@@ -1,5 +1,3 @@
-import 'package:lara/domain/entities/message_entity.dart';
-
 enum Personality {
   goodHumored,
   ironic,
@@ -11,21 +9,36 @@ enum Personality {
 }
 
 class ChatEntity {
-  ChatEntity({
+  const ChatEntity({
     required this.id,
-    required this.localId,
     required this.title,
-    required this.lastMessage,
-    required this.date,
-    required this.personality,
-    this.isTyping,
+    this.lastMessage,
+    required this.createdAt,
+    this.syncedToFirebase = false,
+    this.updatedAt,
   });
-
   final String id;
-  final String localId;
   final String title;
-  final MessageEntity? lastMessage;
-  final DateTime date;
-  final Personality personality;
-  final bool? isTyping;
+  final String? lastMessage;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final bool syncedToFirebase;
+
+  ChatEntity copyWith({
+    String? id,
+    String? title,
+    String? lastMessage,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? syncedToFirebase,
+  }) {
+    return ChatEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      lastMessage: lastMessage ?? this.lastMessage,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncedToFirebase: syncedToFirebase ?? this.syncedToFirebase,
+    );
+  }
 }

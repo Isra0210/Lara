@@ -23,7 +23,7 @@ Failure mapExceptionToFailure(Object e) {
     switch (e.code) {
       case 'google-auth-failed':
         return const GoogleAuthFailure(
-          'Falha durante a autenticação com o Google:',
+          'Operação cancelada',
         );
       case 'permission-denied':
         return const DatabaseFailure(

@@ -9,14 +9,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsController extends GetxController {
   SettingsController({
-    required this.getThemeUseCase,
-    required this.saveThemeUseCase,
+    required this.getThemeUsecase,
+    required this.saveThemeUsecase,
     required this.getPersonalityUsecase,
     required this.savePersonalityUsecase,
   });
 
-  final GetThemeUseCase getThemeUseCase;
-  final SaveThemeUseCase saveThemeUseCase;
+  final GetThemeUsecase getThemeUsecase;
+  final SaveThemeUsecase saveThemeUsecase;
   final GetPersonalityUsecase getPersonalityUsecase;
   final SavePersonalityUsecase savePersonalityUsecase;
 
@@ -38,7 +38,7 @@ class SettingsController extends GetxController {
   void setThemeMode(ThemeMode value) {
     setAppThemeMode(value);
     Get.changeThemeMode(value);
-    saveThemeUseCase(value);
+    saveThemeUsecase(value);
   }
 
   String getNameTheme(ThemeMode mode) {
@@ -59,7 +59,7 @@ class SettingsController extends GetxController {
   }
 
   Future<void> _loadSavedTheme() async {
-    final mode = await getThemeUseCase();
+    final mode = await getThemeUsecase();
     setAppThemeMode(mode);
     Get.changeThemeMode(mode);
   }
@@ -76,7 +76,7 @@ class SettingsController extends GetxController {
       Personality.direct => 'Direto / Sem Rodeios (Modo Foco)',
       Personality.motivator => 'Motivador / Coach Positivo',
       Personality.nerd => 'Nerd / Especialista Geek',
-      Personality.philosophical => 'Nerd / Especialista Geek',
+      Personality.philosophical => 'Zen / Filosófico',
       _ => 'Bem humorada / Leve',
     };
   }

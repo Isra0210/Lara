@@ -32,33 +32,33 @@ class AuthBinding implements Bindings {
       ),
     );
 
-    Get.lazyPut<SignInWithEmailUseCase>(
-      () => SignInWithEmailUseCase(Get.find<AuthRepository>()),
+    Get.lazyPut<SignInWithEmailUsecase>(
+      () => SignInWithEmailUsecase(Get.find<AuthRepository>()),
     );
-    Get.lazyPut<RegisterWithEmailUseCase>(
-      () => RegisterWithEmailUseCase(Get.find<AuthRepository>()),
+    Get.lazyPut<RegisterWithEmailUsecase>(
+      () => RegisterWithEmailUsecase(Get.find<AuthRepository>()),
     );
-    Get.lazyPut<SignInWithGoogleUseCase>(
-      () => SignInWithGoogleUseCase(Get.find<AuthRepository>()),
+    Get.lazyPut<SignInWithGoogleUsecase>(
+      () => SignInWithGoogleUsecase(Get.find<AuthRepository>()),
     );
-    Get.lazyPut<SignOutUseCase>(
-      () => SignOutUseCase(Get.find<AuthRepository>()),
+    Get.lazyPut<SignOutUsecase>(
+      () => SignOutUsecase(Get.find<AuthRepository>()),
     );
-    Get.lazyPut<WatchAuthStateUseCase>(
-      () => WatchAuthStateUseCase(Get.find<AuthRepository>()),
+    Get.lazyPut<WatchAuthStateUsecase>(
+      () => WatchAuthStateUsecase(Get.find<AuthRepository>()),
     );
-    Get.lazyPut<GetCachedUserUseCase>(
-      () => GetCachedUserUseCase(Get.find<AuthRepository>()),
+    Get.lazyPut<GetCachedUserUsecase>(
+      () => GetCachedUserUsecase(Get.find<AuthRepository>()),
     );
 
     Get.put<AuthController>(
       AuthController(
-        signInWithEmail: Get.find<SignInWithEmailUseCase>(),
-        registerWithEmail: Get.find<RegisterWithEmailUseCase>(),
-        signInWithGoogle: Get.find<SignInWithGoogleUseCase>(),
-        signOut: Get.find<SignOutUseCase>(),
-        watchAuthState: Get.find<WatchAuthStateUseCase>(),
-        getCachedUser: Get.find<GetCachedUserUseCase>(),
+        signInWithEmail: Get.find<SignInWithEmailUsecase>(),
+        registerWithEmail: Get.find<RegisterWithEmailUsecase>(),
+        signInWithGoogle: Get.find<SignInWithGoogleUsecase>(),
+        signOut: Get.find<SignOutUsecase>(),
+        watchAuthState: Get.find<WatchAuthStateUsecase>(),
+        getCachedUser: Get.find<GetCachedUserUsecase>(),
       ),
       permanent: true,
     );

@@ -25,15 +25,15 @@ class SettingsBinding implements Bindings {
       ),
     );
 
-    Get.put(GetThemeUseCase(Get.find<ThemeRepository>()));
-    Get.put(SaveThemeUseCase(Get.find<ThemeRepository>()));
+    Get.put(GetThemeUsecase(Get.find<ThemeRepository>()));
+    Get.put(SaveThemeUsecase(Get.find<ThemeRepository>()));
     Get.put(GetPersonalityUsecase(Get.find<PersonalityRepository>()));
     Get.put(SavePersonalityUsecase(Get.find<PersonalityRepository>()));
 
     Get.put(
       SettingsController(
-        getThemeUseCase: Get.find<GetThemeUseCase>(),
-        saveThemeUseCase: Get.find<SaveThemeUseCase>(),
+        getThemeUsecase: Get.find<GetThemeUsecase>(),
+        saveThemeUsecase: Get.find<SaveThemeUsecase>(),
         getPersonalityUsecase: Get.find<GetPersonalityUsecase>(),
         savePersonalityUsecase: Get.find<SavePersonalityUsecase>(),
       ),
