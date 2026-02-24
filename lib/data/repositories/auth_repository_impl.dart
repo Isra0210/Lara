@@ -55,8 +55,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final cred = await _remote.signInWithEmail(email, password);
       if (cred.user == null) throw NullUserException();
 
-      final userDoc = await _remote.getUserDocument(cred.user!.uid);
-      if (userDoc == null) throw NullUserException();
+      final userDoc = await _remote.getOrCreateUserDocument(user: cred.user!);
 
       final model = UserModel.fromJson(userDoc);
 
@@ -75,10 +74,10 @@ class AuthRepositoryImpl implements AuthRepository {
       final cred = await _remote.signInWithGoogleAndLinkIfNeeded(
         passwordToLinkIfRequired: emailPasswordToLink,
       );
+
       if (cred.user == null) throw NullUserException();
 
-      final userDoc = await _remote.getUserDocument(cred.user!.uid);
-      if (userDoc == null) throw NullUserException();
+      final userDoc = await _remote.getOrCreateUserDocument(user: cred.user!);
 
       final model = UserModel.fromJson(userDoc);
 

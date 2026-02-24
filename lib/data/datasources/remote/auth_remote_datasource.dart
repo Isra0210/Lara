@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lara/core/errors/exceptions.dart';
 
 class AuthRemoteDatasource {
   AuthRemoteDatasource(this._auth, this.firestore, this._google);
@@ -105,28 +106,40 @@ class AuthRemoteDatasource {
     }
   }
 
-  Future<Map<String, dynamic>?> getUserDocument(String userId) async {
-    try {
-      final docSnapshot = await firestore
-          .collection('users')
-          .doc(userId)
-          .get()
-          .timeout(const Duration(seconds: 15));
+  Future<Map<String, dynamic>> getOrCreateUserDocument({
+    required User user,
+  }) async {
+    final ref = firestore.collection('users').doc(user.uid);
 
-      if (docSnapshot.exists && docSnapshot.data() != null) {
-        final data = docSnapshot.data()!;
-        return data;
-      }
-
-      return null;
-    } catch (e) {
-      rethrow;
+    final snap = await ref.get().timeout(const Duration(seconds: 8));
+    if (snap.exists && snap.data() != null) {
+      return snap.data()!;
     }
+
+    final now = FieldValue.serverTimestamp();
+
+    final payload = <String, dynamic>{
+      'id': user.uid,
+      'email': user.email,
+      'displayName': user.displayName,
+      'photoURL': user.photoURL,
+      'createdAt': now,
+      'updatedAt': now,
+    };
+
+    await ref
+        .set(payload, SetOptions(merge: true))
+        .timeout(const Duration(seconds: 8));
+
+    final created = await ref.get().timeout(const Duration(seconds: 8));
+    if (created.data() == null) {
+      throw NullUserException();
+    }
+    return created.data()!;
   }
 
   Future<void> signOut() async {
     await _google.signOut();
     await _auth.signOut();
-
   }
 }
