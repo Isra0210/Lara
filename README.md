@@ -246,9 +246,14 @@ A integração com a IA está em:
   - Rode `pod install`
   - Verifique se o `GoogleService-Info.plist` está no target Runner
 - ❌ IA não responde:
+  - O Google identifica chave de API "vazadas" na internet, se por acaso o teste falhar, deve ser isso
   - Verifique a chave da API em `AppConstants`
   - Verifique a implementação em `gemini_datasource.dart`
 
 ---
+
+## 🛠️ Recursos
+
+- https://drive.google.com/drive/folders/1HOBQ95_4L-Vnj_ks0IMyKwoTp29Y9pNL?usp=sharing
 
 Projeto de estudo / POC.
