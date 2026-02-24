@@ -1,4 +1,3 @@
-// lib/features/chat/data/datasources/remote/firebase_sync_datasource.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lara/data/models/chat_model.dart';

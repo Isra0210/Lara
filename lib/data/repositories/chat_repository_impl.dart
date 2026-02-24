@@ -1,4 +1,3 @@
-// lib/features/chat/data/repositories/chat_repository_impl.dart
 import 'package:lara/core/network/connectivity_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:lara/domain/entities/chat_entity.dart';
@@ -39,12 +38,10 @@ class ChatRepositoryImpl implements ChatRepository {
 
     final map = <String, ChatEntity>{};
 
-    // coloca local primeiro...
     for (final c in localChats) {
       map[key(c)] = c;
     }
 
-    // ...e sobrescreve com o remoto (ou inverte se quiser priorizar local)
     for (final c in remoteChats) {
       map[key(c)] = c;
     }
@@ -86,10 +83,7 @@ class ChatRepositoryImpl implements ChatRepository {
     required List<MessageEntity> history,
     required String personality,
   }) async {
-    // 1. Salva mensagem do usuário localmente
     await _messageLocal.insertMessage(MessageModel.fromEntity(userMessage));
-
-    // 2. Atualiza last_message com texto do usuário e updated_at do chat
     final chats = await _chatLocal.getChats();
     final chat = chats.firstWhere(
       (c) => c.id == userMessage.chatId,
@@ -105,14 +99,12 @@ class ChatRepositoryImpl implements ChatRepository {
     );
 
     try {
-      // 3. Chama a Gemini e aguarda resposta completa
       final responseText = await _gemini.sendMessage(
         message: userMessage.content,
         history: history,
         personality: personality,
       );
 
-      // 4. Salva resposta da IA localmente com UUID real
       final aiMessage = MessageModel(
         id: _uuid.v4(),
         chatId: userMessage.chatId,
@@ -123,7 +115,6 @@ class ChatRepositoryImpl implements ChatRepository {
       );
       await _messageLocal.insertMessage(aiMessage);
 
-      // 5. Atualiza last_message e updated_at do chat
       await _chatLocal.updateChat(
         ChatModel.fromEntity(chat).copyWith(
           lastMessage: responseText.length > 80
@@ -134,12 +125,10 @@ class ChatRepositoryImpl implements ChatRepository {
         ),
       );
 
-      // 6. Sync em background
       _trySyncInBackground();
 
       return aiMessage;
     } catch (e) {
-      // Salva mensagem de erro localmente para o usuário ver
       final errorMessage = MessageModel(
         id: _uuid.v4(),
         chatId: userMessage.chatId,

@@ -48,7 +48,6 @@ class SQFliteHelper {
     ''');
   }
 
-  // Migration da v1 para v2: adiciona coluna last_message
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
       await db.execute('ALTER TABLE chats ADD COLUMN last_message TEXT');

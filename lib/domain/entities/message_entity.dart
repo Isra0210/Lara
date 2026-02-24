@@ -1,5 +1,3 @@
-// lib/features/chat/domain/entities/message_entity.dart
-
 enum MessageRole { user, model }
 
 enum MessageStatus { sending, sent, error }

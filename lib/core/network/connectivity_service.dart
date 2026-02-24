@@ -1,4 +1,3 @@
-// lib/core/network/connectivity_service.dart
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConnectivityService {

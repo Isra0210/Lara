@@ -20,7 +20,6 @@ class ChatBinding extends Bindings {
     Get.lazyPut<SQFliteHelper>(() => SQFliteHelper.instance, fenix: true);
     Get.lazyPut<ConnectivityService>(() => ConnectivityService(), fenix: true);
 
-    // Chat Datasources
     Get.lazyPut<ChatLocalDatasource>(
       () => ChatLocalDatasource(Get.find<SQFliteHelper>()),
       fenix: true,
@@ -38,7 +37,6 @@ class ChatBinding extends Bindings {
       fenix: true,
     );
 
-    // Chat Repository
     Get.lazyPut<ChatRepository>(
       () => ChatRepositoryImpl(
         chatLocal: Get.find<ChatLocalDatasource>(),
